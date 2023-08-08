@@ -1,34 +1,46 @@
 import ballerina/http;
+import ballerina/auth;
 import wso2/choreo.sendemail;
 import ballerina/io;
 
-const string ENDPOINT_URL = "https://api.openweathermap.org/data/2.5";
-const int StepCount = 7; // number of steps to be fetch from the API
-configurable string apiKey = ?;
-configurable float latitude = ?;
-configurable float longitude = ?;
-configurable string email = ?;
+configurable string clientKey = ?;
+configurable string clientSecret = ?;
+configurable string inactiveAfter = ?;
+configurable string inactiveBefore = ?;
+
 const emailSubject = "Next 24H Weather Forecast";
+const string emailContent = "Your password has been expired.";
 
 // Create http client
-http:Client httpclient = check new (ENDPOINT_URL);
+http:Client basicAuthClient = new({
+    auth: {
+        scheme: http:AUTHENTICATION_BASIC,
+        username: clientKey,
+        password: clientSecret
+    }
+});
+
+http:Request request = new;
+request.url = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
+request.method = http:GET;
+request.data = "grant_type=client_credentials&scope=SYSTEM";
+
 // Create a new email client
 sendemail:Client emailClient = check new ();
 
 public function main() returns error? {
 
     // Get the weather forecast for the next 24H
-    http:Response response = check httpclient->/forecast(lat = latitude, lon = longitude, cnt = StepCount, appid = apiKey);
+    http:Response response = check basicAuthClient->send(request);
     io:println("Successfully fetched the weather forecast data.");
 
     // Get the json payload from the response
     json jsonResponse = check response.getJsonPayload();
+    io:println(jsonResponse);
 
     // Convert the json payload to a WeatherRecordList
     WeatherRecordList jsonList = check jsonResponse.cloneWithType();
     io:println("Converted the json payload to a WeatherRecordList.");
 
-    // Send the email
-    string _ = check emailClient->sendEmail(email, emailSubject, generateWeatherTable(jsonList));
-    io:println("Successfully sent the email.");
+
 }

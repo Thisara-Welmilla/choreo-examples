@@ -11,24 +11,24 @@ configurable string inactiveBefore = ?;
 const emailSubject = "Next 24H Weather Forecast";
 const string emailContent = "Your password has been expired.";
 
-// Create http client
-http:Client basicAuthClient = new({
-    auth: {
-        scheme: http:AUTHENTICATION_BASIC,
-        username: clientKey,
-        password: clientSecret
-    }
-});
-
-http:Request request = new;
-request.url = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
-request.method = http:GET;
-request.data = "grant_type=client_credentials&scope=SYSTEM";
-
-// Create a new email client
-sendemail:Client emailClient = check new ();
-
 public function main() returns error? {
+
+    // Create http client
+    http:Client basicAuthClient = new({
+        auth: {
+            scheme: http:AUTHENTICATION_BASIC,
+            username: clientKey,
+            password: clientSecret
+        }
+    });
+
+    http:Request request = new;
+    request.url = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
+    request.method = http:GET;
+    request.setJsonPayload = "grant_type=client_credentials&scope=SYSTEM";
+
+    // Create a new email client
+    sendemail:Client emailClient = check new ();
 
     // Get the weather forecast for the next 24H
     http:Response response = check basicAuthClient->send(request);

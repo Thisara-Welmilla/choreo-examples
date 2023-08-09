@@ -1,5 +1,4 @@
 import ballerina/http;
-import ballerina/auth;
 import wso2/choreo.sendemail;
 import ballerina/io;
 
@@ -14,8 +13,6 @@ const string emailContent = "Your password has been expired.";
 
 public function main() returns error? {
 
-    // Create a new email client
-    sendemail:Client emailClient = check new ();
 
         http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/oauth2/token",
             auth = {

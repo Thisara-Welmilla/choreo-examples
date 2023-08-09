@@ -21,7 +21,7 @@ public function main() returns error? {
             }
         );
         json[] userList = check albumClient->/(inactiveAfter="2023-09-28");
-        io:println(payload);
+        io:println(userList);
 
     foreach var user in userList {
         io:println(user.username);

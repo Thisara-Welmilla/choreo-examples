@@ -23,7 +23,8 @@ public function main() returns error? {
             scopes: ["SYSTEM"]
         });
 
-        io:println(provider);
+        string generateToken = check provider.generateToken();
+        io:println(generateToken);
 
         http:Client albumClient = check new (endpointUrl,
             auth = {
@@ -37,12 +38,12 @@ public function main() returns error? {
         io:println(user.userId);
         string userid = (check user.userId).toString();
 
-        http:Client albumClientt = check new (scimEndpoint + "/" + userid,
+        http:Client albumClientt = check new (scimEndpoint,
             auth = {
                 token: bearerToken
             }
         );
-        json[] userListt = check albumClientt->/();
+        json[] userListt = check albumClientt->get(/userid);
         io:println(userListt);
     }
 }

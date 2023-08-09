@@ -7,9 +7,8 @@ configurable string inactiveAfter = ?;
 configurable string inactiveBefore = ?;
 
 const endpointUrl = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
-const emailSubject = "Next 24H Weather Forecast";
+const emailSubject = "Reset your password";
 const string emailContent = "Your password has been expired.";
-const string k = "myaccount-TOTP-config";
 
 public function main() returns error? {
 
@@ -21,8 +20,10 @@ public function main() returns error? {
                 scopes: "SYSTEM"
             }
         );
-        json[] payload = check albumClient->/(inactiveAfter="2023-09-28");
+        json[] userList = check albumClient->/(inactiveAfter="2023-09-28");
         io:println(payload);
 
-
+    foreach var user in userList {
+        io:println(user.username);
+    }
 }

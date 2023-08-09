@@ -13,7 +13,7 @@ const string k = "myaccount-TOTP-config";
 
 public function main() returns error? {
 
-        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?",
+        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users",
             auth = {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,

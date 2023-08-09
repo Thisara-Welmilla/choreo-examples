@@ -21,7 +21,7 @@ public function main() returns error? {
                 scopes: "SYSTEM"
             }
         );
-        string payload = check albumClient->/(inactiveAfter="2023-09-28");
+        json[] payload = check albumClient->/(inactiveAfter="2023-09-28");
         io:println(payload);
 
 

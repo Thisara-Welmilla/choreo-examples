@@ -20,7 +20,7 @@ public function main() returns error? {
                 scopes: "SYSTEM"
             }
         );
-        string payload = check albumClient->/albums;
+        string payload = check albumClient->/myaccount-TOTP-config;
         io:println(payload);
 
 

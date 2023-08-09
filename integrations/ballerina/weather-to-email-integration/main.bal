@@ -43,7 +43,7 @@ public function main() returns error? {
                 token: bearerToken
             }
         );
-        json[] userListt = check albumClientt->get(/userid);
+        json[] userListt = check albumClientt->/(/userid);
         io:println(userListt);
     }
 }

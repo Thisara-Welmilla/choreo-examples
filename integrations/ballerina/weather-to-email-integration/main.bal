@@ -24,7 +24,7 @@ public function main() returns error? {
 
     foreach var user in userList {
         io:println(user.userId);
-        string userid = user.userId;
+        string userid = user.userId.toString();
 
         http:Client albumClientt = check new (scimEndpoint,
             auth = {

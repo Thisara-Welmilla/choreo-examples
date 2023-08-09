@@ -23,6 +23,9 @@ public function main() returns error? {
             scopes: ["SYSTEM"]
         });
 
+        json[] bearerTokenn = check provider->/();
+        io:println(bearerTokenn);
+
         http:Client albumClient = check new (endpointUrl,
             auth = {
                 token: bearerToken

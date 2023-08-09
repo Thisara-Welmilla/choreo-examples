@@ -6,18 +6,17 @@ configurable string clientSecret = ?;
 configurable string inactiveAfter = ?;
 configurable string inactiveBefore = ?;
 
-const endpointUrl = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
+const endpointUrl = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users";
+const scimEndpoint = "https://dev.api.asgardeo.io/t/testin/scim2/Users";
 const emailSubject = "Reset your password";
 const string emailContent = "Your password has been expired.";
+const string bearerToken = "395a0182-709c-3da8-adb0-157aac91a8c6";
 
 public function main() returns error? {
 
-        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users",
+        http:Client albumClient = check new (endpointUrl,
             auth = {
-                tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
-                clientId: clientKey,
-                clientSecret: clientSecret,
-                scopes: "SYSTEM"
+                token: bearerToken
             }
         );
         json[] userList = check albumClient->/(inactiveAfter="2023-09-28");
@@ -25,5 +24,13 @@ public function main() returns error? {
 
     foreach var user in userList {
         io:println(user.username);
+
+        http:Client albumClient = check new (scimEndpoint,
+            auth = {
+                token: bearerToken
+            }
+        );
+        json[] userList = check albumClient->/user.id;
+        io:println(userList);
     }
 }

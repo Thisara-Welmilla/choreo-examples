@@ -1,5 +1,6 @@
 import ballerina/http;
 import ballerina/io;
+import ballerina/oauth2;
 
 configurable string clientKey = ?;
 configurable string clientSecret = ?;
@@ -14,6 +15,13 @@ const string bearerToken = "395a0182-709c-3da8-adb0-157aac91a8c6";
 
 public function main() returns error? {
 
+        oauth2:ClientOAuth2Provider provider = new({
+            tokenUrl: "https://localhost:9445/oauth2/token",
+            clientId: "3MVG9YDQS5WtC11paU2WcQjBB3L",
+            clientSecret: "9205371918321623741",
+            scopes: ["token-scope1", "token-scope2"]
+        });
+
         http:Client albumClient = check new (endpointUrl,
             auth = {
                 token: bearerToken
@@ -24,14 +32,14 @@ public function main() returns error? {
 
     foreach var user in userList {
         io:println(user.userId);
-        string userid = user.userId.toString();
+        string userid = (check user.userId).toString();
 
-        http:Client albumClientt = check new (scimEndpoint,
+        http:Client albumClientt = check new (scimEndpoint + "/" + userid,
             auth = {
                 token: bearerToken
             }
         );
-        json[] userListt = check albumClientt->/userid;
+        json[] userListt = check albumClientt->/();
         io:println(userListt);
     }
 }

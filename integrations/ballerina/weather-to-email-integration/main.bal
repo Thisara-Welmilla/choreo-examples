@@ -17,7 +17,7 @@ public function main() returns error? {
     // Create a new email client
     sendemail:Client emailClient = check new ();
 
-        http:Client albumClient = check new (
+        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/oauth2/token",
             auth = {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,
@@ -25,7 +25,7 @@ public function main() returns error? {
                 scopes: "admin"
             }
         );
-        Album[] payload = check albumClient->/albums;
+        string payload = check albumClient->/albums;
         io:println(payload);
 
 

@@ -13,7 +13,7 @@ const string k = "myaccount-TOTP-config";
 
 public function main() returns error? {
 
-        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/identity/config-mgt/v1.0/resource/myaccount",
+        http:Client albumClient = check new ("https://api.asg.io/t/testasgardeo1/api/idle-account-identification/v1/inactive-users?",
             auth = {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,
@@ -21,7 +21,7 @@ public function main() returns error? {
                 scopes: "SYSTEM"
             }
         );
-        string payload = check albumClient->/k;
+        string payload = check albumClient->/(inactiveAfter="2023-09-28");
         io:println(payload);
 
 

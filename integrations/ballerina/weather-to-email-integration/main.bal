@@ -12,7 +12,7 @@ const string emailContent = "Your password has been expired.";
 
 public function main() returns error? {
 
-        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/identity/config-mgt/v1.0/resource/myaccount/myaccount-TOTP-config",
+        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/identity/config-mgt/v1.0/resource/myaccount",
             auth = {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,

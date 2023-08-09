@@ -9,10 +9,11 @@ configurable string inactiveBefore = ?;
 const endpointUrl = "https://dev.api.asgardeo.io/t/testin/api/idle-account-identification/v1/inactive-users?";
 const emailSubject = "Next 24H Weather Forecast";
 const string emailContent = "Your password has been expired.";
+const string k = "myaccount-TOTP-config";
 
 public function main() returns error? {
 
-        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/identity/config-mgt/v1.0/resource/myaccount/myaccount-TOTP-config",
+        http:Client albumClient = check new ("https://dev.api.asgardeo.io/t/testin/api/identity/config-mgt/v1.0/resource/myaccount",
             auth = {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,
@@ -20,7 +21,7 @@ public function main() returns error? {
                 scopes: "SYSTEM"
             }
         );
-        string payload = check albumClient->();
+        string payload = check albumClient->/k;
         io:println(payload);
 
 

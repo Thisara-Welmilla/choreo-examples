@@ -17,7 +17,7 @@ public function main() returns error? {
                 tokenUrl: "https://dev.api.asgardeo.io/t/testin/oauth2/token",
                 clientId: clientKey,
                 clientSecret: clientSecret,
-                scopes: "admin"
+                scopes: "SYSTEM"
             }
         );
         string payload = check albumClient->/albums;

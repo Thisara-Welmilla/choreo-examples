@@ -23,14 +23,15 @@ public function main() returns error? {
         io:println(userList);
 
     foreach var user in userList {
-        io:println(user.username);
+        io:println(user.userId);
+        string userid = user.userId;
 
         http:Client albumClientt = check new (scimEndpoint,
             auth = {
                 token: bearerToken
             }
         );
-        json[] userListt = check albumClientt->/user.id;
+        json[] userListt = check albumClientt->/userid;
         io:println(userListt);
     }
 }

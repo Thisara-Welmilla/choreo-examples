@@ -25,12 +25,12 @@ public function main() returns error? {
     foreach var user in userList {
         io:println(user.username);
 
-        http:Client albumClient = check new (scimEndpoint,
+        http:Client albumClientt = check new (scimEndpoint,
             auth = {
                 token: bearerToken
             }
         );
-        json[] userList = check albumClient->/user.id;
-        io:println(userList);
+        json[] userListt = check albumClientt->/user.id;
+        io:println(userListt);
     }
 }

@@ -1,14 +1,14 @@
 import ballerina/http;
 import ballerina/io;
 import ballerina/oauth2;
+import ballerina/time;
 import wso2/choreo.sendemail;
 
 // Configurable variables.
-configurable string CLIENT_KEY = ?;
-configurable string CLIENT_SECRET = ?;
-configurable string INACTIVE_AFTER = ?;
-configurable string INACTIVE_BEFORE = ?;
-configurable string ORG_NAME = ?;
+configurable string CLIENT_KEY = "MG4y9ugvdfIKGqC5YTZsRsffCd8a";
+configurable string CLIENT_SECRET = "EWApl7c1GAVQ4bfQiV1YyRzHzfga";
+configurable int EXPIRED_AFTER_IN_DAYS = 0;
+configurable string ORG_NAME = "testin";
 
 // Email template constants.
 const EMAIL_SUBJECT = "Reset your password";
@@ -75,13 +75,16 @@ function createHttpClient(string endpoint, string bearerToken) returns http:Clie
 // Get inactive userList.
 function getInactiveUsersList(string bearerToken) returns json[]|error {
 
+    [string, string] [expiredBeforeTimeStamp, expiredAfterTimeStamp] = getExpiredTimeRange();
     http:Client inactiveUserRetrivalClient = check createHttpClient(inactiveUserRetrivalEndpointUrl, bearerToken);
-    json[] inactiveUsersList = check inactiveUserRetrivalClient->/(inactiveAfter=INACTIVE_AFTER);
-
+    
+    json[] inactiveUsersList;
+    inactiveUsersList = check inactiveUserRetrivalClient->/(inactiveBefore=expiredBeforeTimeStamp, inactiveAfter=expiredAfterTimeStamp);
+        
     return inactiveUsersList;
 }
 
-
+// Send email to given EmailAddress
 function sendEmail(sendemail:Client emailClient, string emailAddress) {
 
     string|error result = emailClient->sendEmail(emailAddress, EMAIL_SUBJECT, EMAIL_CONTENT);
@@ -91,4 +94,24 @@ function sendEmail(sendemail:Client emailClient, string emailAddress) {
     } else {
         io:println("Error occured while sending the email to the " + emailAddress + ".");
     }
+}
+
+function utcSubSeconds(time:Utc utc, time:Seconds seconds) returns time:Utc {
+
+    [int, decimal] [secondsFromEpoch, lastSecondFraction] = utc;
+    secondsFromEpoch = secondsFromEpoch - <int>seconds.floor();
+
+    return [secondsFromEpoch, lastSecondFraction];
+}
+
+function getExpiredTimeRange() returns [string ,string] {
+
+    time:Seconds secondsInDays = 86400;
+    time:Seconds expiredAfterInSec = EXPIRED_AFTER_IN_DAYS*secondsInDays;
+    time:Seconds expiredBeforeInSec = (EXPIRED_AFTER_IN_DAYS+1)*secondsInDays;
+
+    time:Utc expiredAfterTimeStamp = utcSubSeconds(time:utcNow(), expiredAfterInSec);
+    time:Utc expiredBeforeTimeStamp = utcSubSeconds(time:utcNow(), expiredBeforeInSec);
+
+    return [time:utcToString(expiredBeforeTimeStamp).substring(0, 10), time:utcToString(expiredAfterTimeStamp).substring(0, 10)];
 }

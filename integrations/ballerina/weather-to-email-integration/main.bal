@@ -5,10 +5,10 @@ import ballerina/time;
 import wso2/choreo.sendemail;
 
 // Configurable variables.
-configurable string CLIENT_KEY = "MG4y9ugvdfIKGqC5YTZsRsffCd8a";
-configurable string CLIENT_SECRET = "EWApl7c1GAVQ4bfQiV1YyRzHzfga";
-configurable int EXPIRED_AFTER_IN_DAYS = 0;
-configurable string ORG_NAME = "testin";
+configurable string CLIENT_KEY =?;
+configurable string CLIENT_SECRET =?;
+configurable int EXPIRED_AFTER_IN_DAYS =?;
+configurable string ORG_NAME =?;
 
 // Email template constants.
 const EMAIL_SUBJECT = "Reset your password";
